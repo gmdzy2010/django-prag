@@ -36,8 +36,6 @@ class BaseDataSource:
         "source_kind" within the data_source_list, leading to the method of
         "get_data_from_db", to connecting to the data source of database.
         """
-        # The argument "source_kind" would be transformed to lowercase
-        # and it should have been contained within the data_source_list
         if source_kind.lower() in self.data_source_list:
             method_name = "get_data_from_%s" % source_kind
             handler = getattr(self, method_name, self.method_illegal)
@@ -103,8 +101,8 @@ class BaseDataSource:
         
 
 class PostgreSQLDataSource(BaseDataSource):
-    """Get the data source for pdf templates"""
-    data_source_list_add = ""
+    """Get the data source for pdf templates from PostgresSQL"""
+    data_source_list_add = "db"
     
     def __init__(self, **kwargs):
         super(PostgreSQLDataSource, self).__init__(**kwargs)
@@ -120,7 +118,7 @@ class PostgreSQLDataSource(BaseDataSource):
 
 class MySQLDataSource(BaseDataSource):
     """Get the data source for pdf templates from MySQL"""
-    data_source_list_add = ""
+    data_source_list_add = "db"
     
     def __init__(self, test, **kwargs):
         self.test = test
@@ -128,7 +126,6 @@ class MySQLDataSource(BaseDataSource):
         
     def get_data_from_db(self, **kwargs):
         # TODO #: To replace the package of psycopy2 to the specified package
-        # TODO #: of mysql
         handler = psycopg2.connect(**kwargs)
         cursor = handler.cursor()
         cursor.execute("")
