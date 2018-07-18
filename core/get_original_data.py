@@ -2,6 +2,7 @@ import logging
 import os
 import pandas
 import psycopg2
+import re
 # from .decorators import *
 # from .exceptions import *
 
@@ -26,24 +27,23 @@ DATA_SOURCE = {
 
 
 class MethodIllegalException(Exception):
-    """
-    Method illegal exception
-    """
+    """Method illegal exception"""
     pass
 
 
 class BaseDataSource:
-    """
-    The base class when dealing with all kinds of data source
-    """
+    """The base class when dealing with all kinds of data source"""
     data_source_list = []
     data_source_list_add = ""
-    _logs_path = os.path.join(
+    _logs_file_path = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs"
     )
     
     def __init__(self, **kwargs):
-        self.logger = self.set_logger(self._logs_path)
+        # The class instantiation will be gone through passing the keyword
+        # arguments to the instances, the private variable would be set
+        # automatically by the function of setattr(obj, key, value)
+        self.logger = self.set_logger(self._logs_file_path)
         for key, value in kwargs.items():
             setattr(self, key, value)
     
@@ -58,7 +58,7 @@ class BaseDataSource:
         return handler(**kwargs)
     
     def refresh_data_source_list(self):
-        # The first step after class instantiation is to update the 
+        # The first step after class instantiation is to update the
         # data_source_list through appending data_source_list_add
         if self.data_source_list_add and self.data_source_list:
             self.data_source_list.append(self.data_source_list_add)
@@ -74,15 +74,19 @@ class BaseDataSource:
             raise MethodIllegalException("test exception!")
         
     @property
-    def logs_path(self):
-        return self._logs_path
+    def logs_file_path(self):
+        self.logger.info("Logs_file_path: \"%s\"" % self._logs_file_path)
+        return self._logs_file_path
     
-    @logs_path.setter
-    def logs_path(self, new_path):
-        if isinstance(new_path, str):
-            self._logs_path = new_path
+    @logs_file_path.setter
+    def logs_file_path(self, new_path):
+        # Only the file path under Unix/Linux is effective
+        # TODO: to add the file path str of Windows as an effective path
+        if isinstance(new_path, str) and re.search(r"/", new_path):
+            self._logs_file_path = new_path
+            self.logger.warning("New_Logs_file_path: %s" % new_path)
         else:
-            self.logger.info("Failed to reset the logs file path")
+            self.logger.warning("Failed to reset the logs file path")
             raise ValueError("Illegal value of logs file path, Must be a str!")
     
     def set_logger(self, logs_path):
@@ -105,4 +109,41 @@ class BaseDataSource:
         pass
         
 
+class PostgreSQLDataSource(BaseDataSource):
+    """Get the data source for pdf templates"""
+    data_source_list_add = ""
+    
+    def __init__(self, **kwargs):
+        super(PostgreSQLDataSource, self).__init__(**kwargs)
+    
+    def get_data_from_db(self, **kwargs):
+        handler = psycopg2.connect(**kwargs)
+        cursor = handler.cursor()
+        cursor.execute("")
+        cursor.commit()
+        cursor.close()
+        pass
+    
 
+class MySQLDataSource(BaseDataSource):
+    """Get the data source for pdf templates from MySQL"""
+    data_source_list_add = ""
+    
+    def __init__(self, test, **kwargs):
+        self.test = test
+        super(MySQLDataSource, self).__init__(**kwargs)
+        
+    def get_data_from_db(self, **kwargs):
+        # TODO #: To replace the package of psycopy2 to the specified package
+        # TODO #: of mysql
+        handler = psycopg2.connect(**kwargs)
+        cursor = handler.cursor()
+        cursor.execute("")
+        cursor.commit()
+        cursor.close()
+        pass
+    
+
+# if __name__ == "__main__":
+#     test = DataSource.dispatch("db")
+#     test()
