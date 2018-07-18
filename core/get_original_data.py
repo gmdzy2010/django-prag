@@ -58,6 +58,8 @@ class BaseDataSource:
         return handler(**kwargs)
     
     def refresh_data_source_list(self):
+        # The first step after class instantiation is to update the 
+        # data_source_list through appending data_source_list_add
         if self.data_source_list_add and self.data_source_list:
             self.data_source_list.append(self.data_source_list_add)
         return self.data_source_list
