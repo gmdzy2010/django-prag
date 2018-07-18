@@ -48,11 +48,7 @@ class BaseDataSource:
             setattr(self, key, value)
     
     def dispatch(self, source_kind, **kwargs):
-        """
-        Method dispatch to respective function of getting the data from
-        distinct data source.
-        """
-        # The argument "source_kind" would be forcibly transformed to lowercase
+        # The argument "source_kind" would be transformed to lowercase
         # and it should have been contained within the data_source_list
         if source_kind.lower() in self.data_source_list:
             method_name = "get_data_from_%s" % source_kind
