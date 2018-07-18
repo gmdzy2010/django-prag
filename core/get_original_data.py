@@ -21,14 +21,20 @@ class BaseDataSource:
     )
     
     def __init__(self, **kwargs):
-        # The class instantiation will be gone through passing the keyword
-        # arguments to the instances, the private variable would be set
-        # automatically by the function of setattr(obj, key, value)
+        """The class instantiation would be done through passing the keyword
+        arguments to the instances, the instance variable would be set by the
+        function of setattr(obj, key, value)
+        """
         self.logger = self.set_logger(self._logs_file_path)
         for key, value in kwargs.items():
             setattr(self, key, value)
     
     def dispatch(self, source_kind, **kwargs):
+        """This method dispatches specified instance method of getting data to 
+        corresponding data source such as "db", by specifying such to argument 
+        "source_kind" within the data_source_list, leading to the method of
+        "get_data_from_db", to connecting to the data source of database.
+        """
         # The argument "source_kind" would be transformed to lowercase
         # and it should have been contained within the data_source_list
         if source_kind.lower() in self.data_source_list:
@@ -38,18 +44,20 @@ class BaseDataSource:
             handler = self.method_illegal
         return handler(**kwargs)
     
-    def refresh_data_source_list(self):
-        # The first step after class instantiation is to update the
-        # data_source_list through appending data_source_list_add
+    def update_data_source_list(self):
         if self.data_source_list_add and self.data_source_list:
             self.data_source_list.append(self.data_source_list_add)
         return self.data_source_list
     
     @classmethod
     def get_data_from(cls, source_kind):
+        """The first step after class instantiation is to update the variable
+        data_source_list through appending data_source_list_add. An empty and
+        non-string "source_kind" would raise MethodIllegalException.
+        """
         if source_kind and isinstance(source_kind, str):
             source = cls(**DATA_SOURCE[source_kind])
-            source.refresh_data_source_list()
+            source.update_data_source_list()
             source.dispatch(source_kind, **DATA_SOURCE[source_kind])
         else:
             raise MethodIllegalException("test exception!")
