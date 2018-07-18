@@ -26,7 +26,7 @@ class BaseDataSource:
         arguments to the instances, the instance variable would be set by the
         function of setattr(obj, key, value)
         """
-        self.logger = self.set_logger(self._logs_file_path)
+        self.logger = self.set_logger()
         for key, value in kwargs.items():
             setattr(self, key, value)
     
@@ -79,10 +79,10 @@ class BaseDataSource:
             self.logger.warning("Failed to reset the logs file path")
             raise ValueError("Illegal value of logs file path, Must be a str!")
     
-    def set_logger(self, logs_path):
+    def set_logger(self):
         logger = logging.getLogger(__name__)
         logger.setLevel(level=logging.INFO)
-        logger_file = os.path.join(logs_path, '%s.info' % __name__)
+        logger_file = os.path.join(self._logs_file_path, '%s.info' % __name__)
         logger_handler = logging.FileHandler(logger_file)
         logger_handler.setLevel(logging.INFO)
         logger_formatter = logging.Formatter(
