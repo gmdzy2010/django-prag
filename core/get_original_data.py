@@ -14,6 +14,7 @@ class MethodIllegalException(Exception):
 
 class BaseDataSource:
     """The base class when dealing with all kinds of data source"""
+    
     data_source_list = []
     data_source_list_add = ""
     _logs_file_path = os.path.join(
