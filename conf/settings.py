@@ -1,17 +1,16 @@
 DATA_SOURCE = {
     "db": {
-        "host": "192.168.0.100",
-        "port": 5432,
-        "database": "colowell",
-        "user": "postgres",
-        "password": "postgres",
+        "host": "",
+        "port": ,
+        "database": "",
+        "user": "",
+        "password": "",
     },
     "file": {
-        "path": "/usr/bin/",
+        "path": "",
     },
     "stdout": {
-        "info": "This function hadn't been developed, please wait for updating"
-                "in next version",
-        "command": "ps aux|grep test",
+        "info": "",
+        "command": "",
     },
 }
