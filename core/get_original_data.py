@@ -3,8 +3,6 @@ import os
 import pandas
 import psycopg2
 import re
-# from .decorators import *
-# from .exceptions import *
 
 
 class MethodIllegalException(Exception):
