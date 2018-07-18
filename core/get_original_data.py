@@ -13,7 +13,9 @@ class MethodIllegalException(Exception):
 
 
 class BaseDataSource:
-    """The base class when dealing with all kinds of data source"""
+    """The base class when dealing with all kinds of data source such as file 
+    (txt/csv/tsv/xls/xlsx), database(PostgreSQL, MySQL), stdout(run shell).
+    """
     
     data_source_list = []
     data_source_list_add = ""
@@ -71,7 +73,6 @@ class BaseDataSource:
     
     @logs_file_path.setter
     def logs_file_path(self, new_path):
-        # Only the file path under Unix/Linux is effective
         # TODO: to add the file path str of Windows as an effective path
         if isinstance(new_path, str) and re.search(r"/", new_path):
             self._logs_file_path = new_path
@@ -113,7 +114,6 @@ class PostgreSQLDataSource(BaseDataSource):
         cursor.execute("")
         cursor.commit()
         cursor.close()
-        pass
     
 
 class MySQLDataSource(BaseDataSource):
@@ -131,7 +131,14 @@ class MySQLDataSource(BaseDataSource):
         cursor.execute("")
         cursor.commit()
         cursor.close()
-        pass
+
+        
+class FileDataSource(BaseDataSource):
+    pass
+
+
+class StdoutDataSource(BaseDataSource):
+    pass
     
 
 # if __name__ == "__main__":
