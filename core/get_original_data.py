@@ -65,7 +65,7 @@ class BaseDataSource:
     @property
     def logs_file_path(self):
         """The logs_file_path could only be reset with a effective Unix/Linux
-        file path str, and the action of reset would be record in the loggings
+        file path str, and the action of reset would be recorded in log file.
         """
         self.logger.info("Logs_file_path: \"%s\"" % self._logs_file_path)
         return self._logs_file_path
