@@ -101,13 +101,41 @@ class BaseDataSource:
     
     def method_illegal(self, **kwargs):
         pass
-        
+
 
 class DjangoDataSource(BaseDataSource):
+    """DjangoDataSource is aim at getting data from django orm queryset."""
     data_source_list_add = "django"
+    data_field_list = [
+        "name", "gender", "birthday", "send_date", "KRAS_mutation_rate",
+        "BMP3_methylation_rate", "NDRG4_methylation_rate", "result", "score",
+        "report_date", "check_date",
+    ]
     
-    def get_data_from_django(self, queryset_dict, **kwargs):
-        pass
+    def __init__(self, **kwargs):
+        self.context_data = None
+        super(DjangoDataSource, self).__init__(**kwargs)
+
+    def get_data_from_django(self, **kwargs):
+        """The keyword argument "queryset" must be contained within the kwargs,
+        like this: instance.get_data_from_django(queryset=queryset), An empty
+        queryset would raise "ContextEmptyException".
+        """
+        queryset, field = kwargs.get("queryset", None), self.data_field_list
+        if queryset is None:
+            self.logger.warning("Attention! the context dictionary is empty!")
+            raise ContextEmptyException("The context dictionary is empty!")
+        context = {q.code: {f: getattr(q, f) for f in field} for q in queryset}
+        self.context_data = context
+        return self.context_data
+    
+    @classmethod
+    def update_data_field_list(cls, new_field):
+        """This class method could be used when new field was add from report,
+        attention! new_field must be a str.
+        """
+        new_field = new_field if isinstance(new_field, str) else None
+        cls.data_field_list.append(new_field)
 
 
 class PostgreSQLDataSource(BaseDataSource):
