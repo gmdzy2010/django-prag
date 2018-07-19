@@ -93,7 +93,7 @@ class BaseDataSource:
         logger.addHandler(logger_handler)
         return logger
 
-    def store_data(self):
+    def store_data(self, **kwargs):
         """All data getting from source would be stored in the form of python
         dictionary or pandas dataframe.
         """
@@ -103,8 +103,15 @@ class BaseDataSource:
         pass
         
 
+class DjangoDataSource(BaseDataSource):
+    data_source_list_add = "django"
+    
+    def get_data_from_django(self, queryset_dict, **kwargs):
+        pass
+
+
 class PostgreSQLDataSource(BaseDataSource):
-    """Get the data source for pdf templates from PostgresSQL"""
+    """Get the data source for pdf templates"""
     data_source_list_add = "db"
     
     def __init__(self, **kwargs):
@@ -116,6 +123,7 @@ class PostgreSQLDataSource(BaseDataSource):
         cursor.execute("")
         cursor.commit()
         cursor.close()
+        pass
     
 
 class MySQLDataSource(BaseDataSource):
@@ -127,20 +135,20 @@ class MySQLDataSource(BaseDataSource):
         super(MySQLDataSource, self).__init__(**kwargs)
         
     def get_data_from_db(self, **kwargs):
-        # TODO #: Drivers for MySQL under Windows platform need to be installed.
-        handler = MySQLdb.connect(**kwargs)
+        # TODO #: To replace the package of psycopy2 to the specified package
+        handler = psycopg2.connect(**kwargs)
         cursor = handler.cursor()
         cursor.execute("")
         cursor.commit()
         cursor.close()
 
-        
+
 class FileDataSource(BaseDataSource):
-    pass
+    data_source_list_add = "file"
 
 
 class StdoutDataSource(BaseDataSource):
-    pass
+    data_source_list_add = "stdout"
     
 
 # if __name__ == "__main__":
