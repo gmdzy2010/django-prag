@@ -1,4 +1,5 @@
 import logging
+import MySQLdb
 import os
 import pandas
 import psycopg2
@@ -93,6 +94,9 @@ class BaseDataSource:
         return logger
 
     def store_data(self):
+        """All data getting from source would be stored in the form of python
+        dictionary or pandas dataframe.
+        """
         pass
     
     def method_illegal(self, **kwargs):
@@ -123,8 +127,8 @@ class MySQLDataSource(BaseDataSource):
         super(MySQLDataSource, self).__init__(**kwargs)
         
     def get_data_from_db(self, **kwargs):
-        # TODO #: To replace the package of psycopy2 to the specified package
-        handler = psycopg2.connect(**kwargs)
+        # TODO #: Drivers for MySQL under Windows platform need to be installed.
+        handler = MySQLdb.connect(**kwargs)
         cursor = handler.cursor()
         cursor.execute("")
         cursor.commit()
