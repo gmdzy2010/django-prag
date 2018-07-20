@@ -113,9 +113,9 @@ class DjangoDataSource(BaseDataSource):
     ]
     
     def __init__(self, **kwargs):
-        self.context_data = None
+        self.context_data = kwargs["context"] if kwargs["context"] else None
         super(DjangoDataSource, self).__init__(**kwargs)
-
+    
     def get_data_from_django(self, **kwargs):
         """The keyword argument "queryset" must be contained within the kwargs,
         like this: instance.get_data_from_django(queryset=queryset), An empty
@@ -123,8 +123,8 @@ class DjangoDataSource(BaseDataSource):
         """
         queryset, field = kwargs.get("queryset", None), self.data_field_list
         if queryset is None:
-            self.logger.warning("Attention! the context dictionary is empty!")
-            raise ContextEmptyException("The context dictionary is empty!")
+            self.logger.warning("Attention! the queryset is empty!")
+            raise ContextEmptyException("Attention! The queryset is empty!")
         context = {q.code: {f: getattr(q, f) for f in field} for q in queryset}
         self.context_data = context
         return self.context_data
@@ -136,6 +136,7 @@ class DjangoDataSource(BaseDataSource):
         """
         new_field = new_field if isinstance(new_field, str) else None
         cls.data_field_list.append(new_field)
+
 
 
 class PostgreSQLDataSource(BaseDataSource):
@@ -151,7 +152,6 @@ class PostgreSQLDataSource(BaseDataSource):
         cursor.execute("")
         cursor.commit()
         cursor.close()
-        pass
     
 
 class MySQLDataSource(BaseDataSource):
