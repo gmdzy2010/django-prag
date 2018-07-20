@@ -1,18 +1,17 @@
 import logging
-import MySQLdb
 import os
 import pandas
 import psycopg2
 import re
 from core.decorators import *
 from core.exceptions import *
+from conf.configurations import DATA_SOURCE
 
 
 class BaseDataSource:
-    """The base class when dealing with all kinds of data source such as file 
+    """The base class when dealing with all kinds of data source such as file
     (txt/csv/tsv/xls/xlsx), database(PostgreSQL, MySQL), stdout(run shell).
     """
-    
     data_source_list = []
     data_source_list_add = ""
     _logs_file_path = os.path.join(
@@ -28,22 +27,23 @@ class BaseDataSource:
         for key, value in kwargs.items():
             setattr(self, key, value)
     
-    def dispatch(self, source_kind, **kwargs):
-        """This method dispatches specified instance method of getting data to 
-        corresponding data source such as "db", by specifying such to argument 
+    def dispatch(self, source_kind):
+        """This method dispatches specified instance method of getting data to
+        corresponding data source such as "db", by specifying such to argument
         "source_kind" within the data_source_list, leading to the method of
         "get_data_from_db", to connecting to the data source of database.
         """
+        # The argument "source_kind" would be transformed to lowercase
+        # and it should have been contained within the data_source_list
         if source_kind.lower() in self.data_source_list:
             method_name = "get_data_from_%s" % source_kind
             handler = getattr(self, method_name, self.method_illegal)
         else:
             handler = self.method_illegal
-        return handler(**kwargs)
+        return handler
     
     def update_data_source_list(self):
-        if self.data_source_list_add and self.data_source_list:
-            self.data_source_list.append(self.data_source_list_add)
+        self.data_source_list.append(self.data_source_list_add)
         return self.data_source_list
     
     @classmethod
@@ -55,22 +55,22 @@ class BaseDataSource:
         if source_kind and isinstance(source_kind, str):
             source = cls(**DATA_SOURCE[source_kind])
             source.update_data_source_list()
-            source.dispatch(source_kind, **DATA_SOURCE[source_kind])
+            return source.dispatch(source_kind)
         else:
             raise MethodIllegalException("test exception!")
-        
+    
     @property
     def logs_file_path(self):
         """The logs_file_path could only be reset with a effective Unix/Linux
         file path str, and the action of reset would be recorded in log file.
         """
-        self.logger.info("Logs_file_path: \"%s\"" % self._logs_file_path)
+        self.logger.info("Logs_file_path: %s" % self._logs_file_path)
         return self._logs_file_path
     
     @logs_file_path.setter
     def logs_file_path(self, new_path):
         # TODO: to add the file path str of Windows as an effective path
-        if isinstance(new_path, str) and re.search(r"/", new_path):
+        if isinstance(new_path, str) and re.search(r'/', new_path):
             self._logs_file_path = new_path
             self.logger.warning("New_Logs_file_path: %s" % new_path)
         else:
@@ -79,12 +79,11 @@ class BaseDataSource:
     
     def set_logger(self):
         logger = logging.getLogger(__name__)
-        logger.setLevel(level=logging.INFO)
-        logger_file = os.path.join(self._logs_file_path, '%s.info' % __name__)
+        logger_file = os.path.join(self._logs_file_path, 'test.info')
         logger_handler = logging.FileHandler(logger_file)
         logger_handler.setLevel(logging.INFO)
         logger_formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            "%(asctime)s/%(name)s/%(levelname)s/%(message)s"
         )
         logger_handler.setFormatter(logger_formatter)
         logger.addHandler(logger_handler)
@@ -96,9 +95,9 @@ class BaseDataSource:
         """
         pass
     
-    def method_illegal(self, **kwargs):
+    def method_illegal(self):
         pass
-
+        
 
 class DjangoDataSource(BaseDataSource):
     """DjangoDataSource is aim at getting data from django orm queryset."""
@@ -110,7 +109,7 @@ class DjangoDataSource(BaseDataSource):
     ]
     
     def __init__(self, **kwargs):
-        self.context_data = kwargs["context"] if kwargs["context"] else None
+        self.context_data = None
         super(DjangoDataSource, self).__init__(**kwargs)
     
     def get_data_from_django(self, **kwargs):
@@ -127,16 +126,24 @@ class DjangoDataSource(BaseDataSource):
         return self.context_data
     
     @classmethod
-    def update_data_field_list(cls, new_field):
+    def update_data_field_list(cls, field_list):
+        """This class method supplies interface to keep the same field list to
+        the django database.
+        """
+        cls.data_field_list = field_list
+    
+    @classmethod
+    def add_new_field(cls, new_field):
         """This class method could be used when new field was add from report,
         attention! new_field must be a str.
         """
         new_field = new_field if isinstance(new_field, str) else None
         cls.data_field_list.append(new_field)
-
+    
+    
 
 class PostgreSQLDataSource(BaseDataSource):
-    """Get the data source for pdf templates"""
+    """Get the data source for pdf templates."""
     data_source_list_add = "db"
     
     def __init__(self, **kwargs):
@@ -159,7 +166,7 @@ class MySQLDataSource(BaseDataSource):
         super(MySQLDataSource, self).__init__(**kwargs)
         
     def get_data_from_db(self, **kwargs):
-        # TODO #: To replace the package of psycopy2 to the specified package
+        # TODO: To replace the package of psycopy2 to the specified package
         handler = psycopg2.connect(**kwargs)
         cursor = handler.cursor()
         cursor.execute("")
@@ -173,8 +180,3 @@ class FileDataSource(BaseDataSource):
 
 class StdoutDataSource(BaseDataSource):
     data_source_list_add = "stdout"
-    
-
-# if __name__ == "__main__":
-#     test = DataSource.dispatch("db")
-#     test()
