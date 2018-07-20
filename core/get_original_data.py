@@ -4,11 +4,8 @@ import os
 import pandas
 import psycopg2
 import re
-
-
-class MethodIllegalException(Exception):
-    """Method illegal exception"""
-    pass
+from core.decorators import *
+from core.exceptions import *
 
 
 class BaseDataSource:
