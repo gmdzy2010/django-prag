@@ -3,9 +3,9 @@ import os
 import pandas
 import psycopg2
 import re
+from conf.configurations import DATA_SOURCE
 from core.decorators import *
 from core.exceptions import *
-from conf.configurations import DATA_SOURCE
 
 
 class BaseDataSource:
@@ -57,7 +57,7 @@ class BaseDataSource:
             source.update_data_source_list()
             return source.dispatch(source_kind)
         else:
-            raise MethodIllegalException("test exception!")
+            raise MethodIllegalException("argument illegal! Must be a str")
     
     @property
     def logs_file_path(self):
@@ -139,8 +139,7 @@ class DjangoDataSource(BaseDataSource):
         """
         new_field = new_field if isinstance(new_field, str) else None
         cls.data_field_list.append(new_field)
-    
-    
+
 
 class PostgreSQLDataSource(BaseDataSource):
     """Get the data source for pdf templates."""
