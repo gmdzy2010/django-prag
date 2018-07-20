@@ -138,7 +138,6 @@ class DjangoDataSource(BaseDataSource):
         cls.data_field_list.append(new_field)
 
 
-
 class PostgreSQLDataSource(BaseDataSource):
     """Get the data source for pdf templates"""
     data_source_list_add = "db"
