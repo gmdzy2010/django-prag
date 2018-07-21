@@ -1,5 +1,5 @@
-# "python main.py" should execute the pipline and output the wanted pdf file
-from core.get_original_data import DjangoDataSource
+from core.get_original_data import django_data_source
+from core.render_data import HTMLTemplateRender
 
 
 class QuerySet:
@@ -18,10 +18,13 @@ class QuerySet:
     KRAS_mutation_rate = 0.05
     BMP3_methylation_rate = 0.01
     NDRG4_methylation_rate = 0.07
+    
+    def __init__(self, code):
+        self.code = code
 
     
 if __name__ == "__main__":
-    queryset = [QuerySet(), QuerySet(), QuerySet()]
-    get_data = DjangoDataSource.get_data_from("django")
-    print(get_data(queryset=queryset))
-    
+    queryset = [QuerySet("TEST001"), QuerySet("TEST002"), QuerySet("TEST003")]
+    context_dict = django_data_source(queryset=queryset)
+    template_render = HTMLTemplateRender(context_dict, "MEIYIN001")
+    template_render.render_context() 
