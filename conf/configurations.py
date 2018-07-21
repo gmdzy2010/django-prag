@@ -16,14 +16,14 @@ PACKAGE_ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DATA_SOURCE = {
     "db": {
-        "host": "192.168.0.100",
-        "port": 5432,
-        "database": "colowell",
-        "user": "postgres",
-        "password": "postgres",
+        "host": "",
+        "port": 0000,
+        "database": "",
+        "user": "",
+        "password": "",
     },
     "file": {
-        "path": "/usr/bin/",
+        "path": "",
     },
     "stdout": {
         "info": "This function hadn't been developed, please wait for updating"
