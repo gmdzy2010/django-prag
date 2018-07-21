@@ -179,3 +179,6 @@ class FileDataSource(BaseDataSource):
 
 class StdoutDataSource(BaseDataSource):
     data_source_list_add = "stdout"
+
+
+django_data_source = DjangoDataSource.get_data_from("django")
