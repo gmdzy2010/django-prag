@@ -1,30 +1,24 @@
-import os
-from  multiprocessing import Pool
+from conf.configurations import (
+    TEMPLATE_PATH,
+    TEMPLATE_PATH_RENDERED,
+    PACKAGE_NAME,
+)
 from core.exceptions import PathIllegalException
+from multiprocessing import Pool
 from jinja2 import Environment, PackageLoader
 
 
-class BaseTemplatesRender:
+class HTMLTemplateRender:
     """The HTML template render"""
-    templates_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "templates"
-    )
-    output_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "templates"
-    )
+    templates_path = TEMPLATE_PATH
+    output_path = TEMPLATE_PATH_RENDERED
     
     def __init__(self, context_dict, template_code):
         self.context_dict = context_dict
         self.template_code = template_code
-        self.logger = self.set_logger()
         self.rendered_file_path = None
         self.is_render_end = False
         
-    def get_context_dict(self):
-        return self.context_dict
-    
     @classmethod
     def change_templates_path(cls, new_templates_path):
         """This method supplied interface to change templates directory, if
@@ -44,14 +38,14 @@ class BaseTemplatesRender:
             raise PathIllegalException("The path input is illegal!")
     
     def _render_context(self, barcode, context_dict):
-        env = Environment(loader=PackageLoader('realbio_prag', 'templates'))
+        env = Environment(loader=PackageLoader(PACKAGE_NAME, 'templates'))
         template_handler = env.get_template(
             "template_%s.html" % self.template_code
         )
         html_handler = template_handler.render(context_dict=context_dict)
         with open("%s/%s.html" % (self.output_path, barcode), "w") as handler:
             handler.write(html_handler)
-    
+        
     def render_context(self):
         """This method used multiprocessing package to accelerate the process
         of rendering those ORM objects of django queryset into respective HTML
@@ -63,9 +57,6 @@ class BaseTemplatesRender:
         pool.close()
         pool.join()
         self.is_render_end = True
-    
-    def set_logger(self):
-        pass
 
 
 class HTML2PDFRender:
