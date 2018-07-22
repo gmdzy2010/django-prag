@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from core.get_original_data import django_data_source
 from core.render_data import HTMLTemplateRender
 
@@ -9,6 +10,7 @@ class QuerySet:
     birthday = "1990/06/24"
     check_date = "2018/07/19"
     code = "V20180720"
+    contact = 13003672642
     gender = 1
     name = "Refactor Man"
     result = "negative"
@@ -24,7 +26,11 @@ class QuerySet:
 
     
 if __name__ == "__main__":
-    queryset = [QuerySet("TEST001"), QuerySet("TEST002"), QuerySet("TEST003")]
+    queryset = [
+        QuerySet("CYS180000001"),
+        QuerySet("CYS180000002"),
+    ]
     context_dict = django_data_source(queryset=queryset)
     template_render = HTMLTemplateRender(context_dict, "MEIYIN001")
-    template_render.render_context() 
+    template_render.render_context_to_html()
+    template_render.convert_html_to_pdf(if_keeps_html=True)
