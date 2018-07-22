@@ -105,7 +105,7 @@ class DjangoDataSource(BaseDataSource):
     data_field_list = [
         "name", "gender", "birthday", "send_date", "KRAS_mutation_rate",
         "BMP3_methylation_rate", "NDRG4_methylation_rate", "result", "score",
-        "report_date", "check_date",
+        "report_date", "check_date", "contact",
     ]
     
     def __init__(self, **kwargs):
