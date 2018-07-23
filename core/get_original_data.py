@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import logging
 import os
 import pandas
 import psycopg2
 import re
+import sys
 from conf.configurations import DATA_SOURCE
 from core.decorators import *
 from core.exceptions import *
@@ -105,7 +107,7 @@ class DjangoDataSource(BaseDataSource):
     data_field_list = [
         "name", "gender", "birthday", "send_date", "KRAS_mutation_rate",
         "BMP3_methylation_rate", "NDRG4_methylation_rate", "result", "score",
-        "report_date", "check_date", "contact",
+        "report_date", "check_date", "contact"
     ]
     
     def __init__(self, **kwargs):
@@ -175,10 +177,30 @@ class MySQLDataSource(BaseDataSource):
 
 class FileDataSource(BaseDataSource):
     data_source_list_add = "file"
+    
+    def __init__(self, file_name, file_path, **kwargs):
+        self.file_name = file_name
+        self.file_path = file_path
+        super(FileDataSource, self).__init__(**kwargs)
+    
+    def get_data_from_file(self, ** kwargs):
+        pass
+    
+    @file_exist_check
+    def get_file(self):
+        pass
 
 
 class StdoutDataSource(BaseDataSource):
     data_source_list_add = "stdout"
+    
+    def __init__(self, **kwargs):
+        self.stdout = sys.stdout
+        super(StdoutDataSource, self).__init__(**kwargs)
+    
+    def get_data_from_stdout(self, **kwargs):
+        pass
 
 
 django_data_source = DjangoDataSource.get_data_from("django")
+
