@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 This file contains all of the settings for this package.
 """
@@ -16,14 +17,14 @@ PACKAGE_ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DATA_SOURCE = {
     "db": {
-        "host": "",
-        "port": 0000,
-        "database": "",
-        "user": "",
-        "password": "",
+        "host": "192.168.0.100",
+        "port": 5432,
+        "database": "colowell",
+        "user": "postgres",
+        "password": "postgres",
     },
     "file": {
-        "path": "",
+        "path": "/usr/bin/",
     },
     "stdout": {
         "info": "This function hadn't been developed, please wait for updating"
@@ -44,3 +45,15 @@ LOGGING_FILE_PATH = os.path.join(PACKAGE_ROOT_PATH, "logs")
 TEMPLATE_PATH = os.path.join(PACKAGE_ROOT_PATH, "templates")
 
 TEMPLATE_PATH_RENDERED = os.path.join(PACKAGE_ROOT_PATH, "rendered_file")
+
+
+# Command line settings
+
+WK_ARGUMENTS = {
+    "--lowquality": "",
+    "--margin-bottom": "",
+    "--margin-left": "",
+    "--margin-right": "",
+    "--margin-top": "",
+    "--disable-javascript": "",
+}
