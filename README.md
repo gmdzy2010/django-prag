@@ -1,4 +1,4 @@
-# django-prag
+# realbio_prag
 The Pipeline of Report Auto-Generations (PRAG) 
 
 
