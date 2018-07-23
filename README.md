@@ -1,4 +1,4 @@
-# PRAG
+# django-prag
 The Pipeline of Report Auto-Generations (PRAG) 
 
 
