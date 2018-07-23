@@ -92,8 +92,8 @@ class HTMLTemplateRender:
                 "wkhtmltopdf",
                 "--disable-smart-shrinking",
                 "--dpi", "96",
-                "--page-width", "209mm",
-                "--page-height", "296mm",
+                "--page-width", "210mm",
+                "--page-height", "297mm",
                 "--log-level", "none",
                 "--margin-top", "0mm",
                 "--margin-bottom", "0mm",
@@ -107,4 +107,3 @@ class HTMLTemplateRender:
             # saved permanently, This may lead to the WASTING OF STORAGE.
             if not if_keeps_html and os.access(html_name, os.F_OK):
                 os.remove(html_name)
-
