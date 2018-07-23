@@ -4,13 +4,11 @@ from core.render_data import HTMLTemplateRender
 
 
 class QuerySet:
-    """
-    for test queryset of django queryset interface
-    """
+    """for test queryset of django queryset interface."""
     birthday = "1990/06/24"
     check_date = "2018/07/19"
     code = "V20180720"
-    contact = 13003672642
+    contact = 000000000
     gender = 1
     name = "Refactor Man"
     result = "negative"
@@ -24,7 +22,7 @@ class QuerySet:
     def __init__(self, code):
         self.code = code
 
-    
+
 if __name__ == "__main__":
     queryset = [
         QuerySet("CYS180000001"),
@@ -32,5 +30,6 @@ if __name__ == "__main__":
     ]
     context_dict = django_data_source(queryset=queryset)
     template_render = HTMLTemplateRender(context_dict, "MEIYIN001")
-    template_render.render_context_to_html()
-    template_render.convert_html_to_pdf(if_keeps_html=True)
+    # template_render.render_context_to_html()
+    template_render.render_context_to_html_async()
+    template_render.convert_html_to_pdf()
