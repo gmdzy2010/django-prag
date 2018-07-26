@@ -19,5 +19,5 @@ The next step is to finish the subclass of FileDataSource and StdoutDataSource.
 >Last edit by gmdzy2010, 07/24/2018, 11:44:54
 
 ### Version
-##### v0.8.0
+##### v0.8.0 (07/26/2018)
 >update README.md about project info
