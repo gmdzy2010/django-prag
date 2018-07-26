@@ -15,5 +15,9 @@ This package supplied interfaces to common data file such as csv, tsv, txt, xls/
 As so far, the key module `get_original_data.py` and `render_data.py` are finished partially, some simple functions test were run and then passed, but no unittest.
 
 ### What's next
-The next step, is to finish the subclass of FileDataSource and StdoutDataSource. 
+The next step is to finish the subclass of FileDataSource and StdoutDataSource. 
 >Last edit by gmdzy2010, 07/24/2018, 11:44:54
+
+### Version
+##### v0.8.0
+>update README.md about project info
