@@ -15,9 +15,9 @@ This package supplied interfaces to common data file such as csv, tsv, txt, xls/
 ### What's now
 As so far, the key module `get_original_data.py` and `render_data.py` are finished partially, some simple functions test were run and then passed, but no unittest.
 
-### What's next
+### TODO
 The next step is to finish the subclass of FileDataSource and StdoutDataSource. 
-
+The arguments of wkhtmltopdf is still fixed and it's not flexible to change the style of pdf generated, so the method `get_command_arguments` need to be done.
 ### Version
 ##### v0.8.0 (07/26/2018)
 >update README.md about project info
